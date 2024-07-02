@@ -7,12 +7,12 @@ import { motion, useAnimation } from 'framer-motion'
 import {
   setTileCoords,
   unsetUserTileCoords,
-} from '../redux/dominoSlice'
+} from '../redux/dominoSliceOnline'
 import {
   startDrag, stopDrag, startDrop,
 } from '../redux/dragNdropSlice'
 import { getNumbers } from '../util/tileOperations'
-import DropPlaceholder from './DropPlaceholder'
+import DropPlaceholderOnline from './DropPlaceholderOnline'
 
 const DominoTile = styled(motion.div)`
   margin: 1px;
@@ -38,7 +38,7 @@ const DominoTile = styled(motion.div)`
   )};
 `;
 
-const Tile = ({
+const TileOnline = ({
   tile = {
     id: '66',
     isRotated: false,
@@ -62,7 +62,7 @@ const Tile = ({
 }) => {
   const ref = useRef()
   const dispatch = useDispatch()
-  const { firstInPlayline } = useSelector((state) => state.domino)
+  const { firstInPlayline } = useSelector((state) => state.domino_online)
   const controls = useAnimation()
 
   // animate each tile after mount
@@ -156,7 +156,7 @@ const Tile = ({
   return (
     <>
       {first && (
-      <DropPlaceholder digit={getNumbers(tile)[0]} first />
+      <DropPlaceholderOnline digit={getNumbers(tile)[0]} first />
       )}
       <DominoTile
         className={className}
@@ -180,10 +180,10 @@ const Tile = ({
         whileHover={draggable && { scale: 1.2 }}
       />
       {last && (
-      <DropPlaceholder digit={getNumbers(tile)[1]} />
+      <DropPlaceholderOnline digit={getNumbers(tile)[1]} />
       )}
     </>
   )
 }
 
-export default Tile
+export default TileOnline

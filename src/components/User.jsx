@@ -14,11 +14,12 @@ import {
   SubTitle,
   Button,
 } from './styled'
+import { clearState } from '../util/localStorage'
 
 const Message = styled(SubTitle)`
   font-weight: 200;
   font-size: 0.9rem;
-  color: aquamarine;
+  color: #555;
 `
 const WinMessage = styled(Message)`
   font-size: 1.3rem;
@@ -45,17 +46,18 @@ const User = () => {
     }, 300)
   }
   const handleRestart = () => {
+    clearState()
     dispatch(restartGame())
   }
   return (
     <>
-      <Title>{`Player: ${user?.name}`}</Title>
+      <Title>{`Игрок: ${user?.name}`}</Title>
       {!user?.stock?.length && (
-        <SubTitle>Your stock is empty</SubTitle>
+        <SubTitle>Набор фишек пуст</SubTitle>
       )}
       {!winner && (
       <Message>
-        Drag a tile and drop it to the Play Line
+        Перенесите фишку на игровое поле
       </Message>
       )}
       <StockContainer>
@@ -65,17 +67,17 @@ const User = () => {
       </StockContainer>
       {winner && (winner?.id === 1 ? (
         <WinMessage>
-          You Won! Great Victory! Restart to play again
+          Вы выиграли!
         </WinMessage>
       ) : (
         <LoseMessage>
-          You Lose. Restart to try again.
+          Вы проиграли
         </LoseMessage>
       ))}
       <Button
         onClick={winner ? handleRestart : stock?.length > 0 ? handleDrawTile : handleMissMove}
       >
-        {winner ? 'Restart Game' : stock?.length > 0 ? 'Draw Tile' : 'Miss Move'}
+        {winner ? 'Рестарт' : stock?.length > 0 ? 'Новая фишка' : 'Пропустить'}
       </Button>
     </>
   )

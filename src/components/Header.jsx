@@ -14,7 +14,7 @@ const PageTitle = styled.h1`
 const Header = () => (
   <GameHeader>
     <PageTitle>
-      Play&nbsp;Domino&nbsp;with&nbsp;A.I.
+      Играть в домино с ИИ
     </PageTitle>
   </GameHeader>
 )

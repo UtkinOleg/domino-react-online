@@ -28,12 +28,13 @@ const AIPlayer = () => {
     <>
       {aiPlayer?.stock?.length > 0 ? (
         <>
-          <Title>{`Player: ${aiPlayer?.name}`}</Title>
+          <Title>{`Игрок: ${aiPlayer?.name}`}</Title>
           <StockContainer>
             {aiPlayer?.stock?.map((tile) => (
               <Tile
                 key={tile.id}
                 tile={tile}
+                size="sm"
                 variant="dimmed"
                 faceDown
               />
@@ -42,8 +43,8 @@ const AIPlayer = () => {
         </>
       ) : (
         <>
-          <Title>AI&apos;s stock</Title>
-          <SubTitle>is empty</SubTitle>
+          <Title>фишки ИИ</Title>
+          <SubTitle>- нет фишек</SubTitle>
         </>
       )}
     </>

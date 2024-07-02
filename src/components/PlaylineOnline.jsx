@@ -1,21 +1,21 @@
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import Tile from './Tile'
+import TileOnline from './TileOnline'
 import { StockContainer as SC, Title } from './styled'
 
 const StockContainer = styled(SC)`
   margin-left: -0.5rem;
 `
 
-const PlayLine = () => {
-  const { playline } = useSelector((state) => state.domino)
+const PlayLineOnline = () => {
+  const { playline } = useSelector((state) => state.domino_online)
 
   return (
     <>
       <Title>Игровое поле</Title>
       <StockContainer>
         {playline?.map((tile, i, a) => (
-          <Tile
+          <TileOnline
             tile={tile}
             key={tile.id}
             tileStyle="mixed"
@@ -28,4 +28,4 @@ const PlayLine = () => {
   )
 }
 
-export default PlayLine
+export default PlayLineOnline

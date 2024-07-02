@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 import { combinationsWithRepetition, shuffle } from '../util/combinatorics'
+import { loadState, saveState } from '../util/localStorage'
 import {
   insertTileToPlayline,
   getEdges,
@@ -12,6 +13,7 @@ const initialState = {
   stock: [],
   playline: [],
   players: [],
+  reload: true,
   winner: null,
   firstInPlayline: {
     id: '11',
@@ -24,36 +26,49 @@ const initialState = {
     },
   },
 };
+
 const dominoSlice = createSlice({
   name: 'domino',
   initialState,
   reducers: {
 
     restartGame: (state) => {
-      state.winner = null;
-      state.stock = [];
-      state.playline = [];
-      state.initialStock = combinationsWithRepetition(
-        [...Array(7).keys()],
-        2,
-      ).map((tile) => ({
-        id: tile.join(''),
-        isRotated: false,
-        lastCoords: {
-          x: 0,
-          y: 0,
-          width: 0,
-          height: 0,
-        },
-      })).filter((tile) => tile.id !== state.firstInPlayline.id)
-      shuffle(state.initialStock)
-      // create players
-      state.players = [1, 2].map((id) => ({
-        id,
-        missedLastMove: 0,
-        name: ['Human', 'Artificial Intelligence'][id - 1],
-        stock: [],
-      }))
+      const persistedState = loadState()
+      if (persistedState) {
+        state.reload = true;
+        state.winner = null;
+        state.stock = persistedState.stock;
+        state.playline = persistedState.playline;
+        state.initialStock = persistedState.initialStock
+        state.players = persistedState.players
+      } else {
+        state.reload = false;
+        state.winner = null;
+        state.stock = [];
+        state.playline = [];
+        state.initialStock = combinationsWithRepetition(
+          [...Array(7).keys()],
+          2,
+        ).map((tile) => ({
+          id: tile.join(''),
+          isRotated: false,
+          lastCoords: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+          },
+        }));
+        shuffle(state.initialStock);
+        state.firstInPlayline = state.initialStock.splice(state.initialStock.length - 1)[0];
+        // create players
+        state.players = [1, 2].map((id) => ({
+          id,
+          missedLastMove: 0,
+          name: ['Человек', 'ИИ'][id - 1],
+          stock: [],
+        }))
+      }
     },
 
     setTileCoords: (state, { payload: { tile, lastCoords } }) => {
@@ -85,6 +100,7 @@ const dominoSlice = createSlice({
             tile: playersTile,
             position,
           })
+          saveState(state)
           // remove matched tile from player's stock
           user.stock = user.stock.filter((t) => t !== playersTile)
           if (user.stock.length === 0) {
@@ -116,6 +132,7 @@ const dominoSlice = createSlice({
           // game over
             state.winner = ai
           }
+          saveState(state)
           // if the stock is empty and the rival missed previous move
         } else if (!state.stock.length && state.players[0].missedLastMove) {
           [state.winner] = [...state.players].sort((a, b) => a.stock.length - b.stock.length)

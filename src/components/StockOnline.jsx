@@ -1,28 +1,35 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import Tile from './Tile'
+import TileOnline from './TileOnline'
 import {
   restartGame,
   putTileToStock,
-  drawTileToAI,
+  drawTileToOpponent,
   drawTileToUser,
   drawFirstTileToPlayline,
-} from '../redux/dominoSlice'
+  resetInitialStock,
+} from '../redux/dominoSliceOnline'
 import { StockContainer, Title, SubTitle as ST } from './styled'
 import { dispatchConsequently } from '../util/tileOperations'
+import { socket } from '../util/socket';
 
 const SubTitle = styled(ST)`
   margin-bottom: 0.5rem;
 `
 
-const Stock = () => {
+const StockOnline = () => {
   const dispatch = useDispatch()
-  const tiles = useSelector((state) => state.domino.stock)
-  const { winner, reload } = useSelector((state) => state.domino)
+  const tiles = useSelector((state) => state.domino_online.stock)
+  const { 
+    players: [user, opponentPlayer], 
+    winner, 
+    reload,
+    stock
+  } = useSelector((state) => state.domino_online)
 
   // restart the game when winner is set to null
-  useEffect(() => {
+  /* useEffect(() => {
     if (winner === null) {
       (async () => {
         const interval = 0.3
@@ -34,21 +41,24 @@ const Stock = () => {
             steps: 28,
             interval: 0.05,
           })
+
           await dispatchConsequently(dispatch, {
-            action: drawTileToAI,
+            action: drawTileToOpponent,
             steps: 6,
             interval,
           })
+
           await dispatchConsequently(dispatch, {
             action: drawTileToUser,
             steps: 6,
             interval,
           })
+
           dispatch(drawFirstTileToPlayline())
         }
       })()
     }
-  }, [winner, reload])
+  }, [user, opponentPlayer, winner, reload]) */
 
   return (
     <div>
@@ -56,7 +66,7 @@ const Stock = () => {
       {tiles?.length > 0 ? (
         <StockContainer>
           {tiles?.map((tile) => (
-            <Tile
+            <TileOnline
               key={tile.id}
               tile={tile}
               size="sm"
@@ -73,4 +83,4 @@ const Stock = () => {
   )
 }
 
-export default Stock
+export default StockOnline
