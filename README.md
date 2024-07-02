@@ -11,6 +11,5 @@ $ npm run start:prod
 ```
 
 ## For running online game you need to run Domino-api on your server
-```bash
-https://github.com/UtkinOleg/domino-api
-```
+
+[Domino-api](https://github.com/UtkinOleg/domino-api) based on [NestJS](https://github.com/nestjs/nest).
