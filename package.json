@@ -32,6 +32,9 @@
     "start:dev": "env-cmd -f env/.env.dev react-scripts start",
     "start:prod": "env-cmd -f env/.env.prod react-scripts build"
   },
+  "engines": {
+    "node": ">=16.20.2 <16.20.10"
+  },  
   "browserslist": {
     "production": [
       ">0.2%",
